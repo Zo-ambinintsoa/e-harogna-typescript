@@ -1,0 +1,15 @@
+{
+    "type": "mysql",
+    "host": "localhost",
+    "port": 3306,
+    "username": "admin",
+    "password": "zobest",
+    "database": "e-horagna-1",
+    "entities": [
+        "src/entity/*.ts"
+    ],
+    "logging": false,
+    "synchronize": true,
+    "subscribers": [],
+    "migrations": []
+    }
