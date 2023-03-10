@@ -16,5 +16,5 @@ export class CourseCat {
     image: String;
     
     @OneToMany(() => Course, (courses) => courses.courseCat)
-    courses: Course[]
+    courses: Course[];
 }

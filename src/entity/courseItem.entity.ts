@@ -17,5 +17,5 @@ export class CourseItem {
 
     @ManyToOne(() => Course)
     @JoinColumn({name: "courseId"})
-    role: Course;
+    course: Course;
 }

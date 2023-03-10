@@ -6,7 +6,8 @@ import bcryptjs from 'bcryptjs';
 
 export const fetchAllUser = async (req: Request, res: Response ) => { 
     const take = 15;
-    const page = parseInt( req.query.page as string || '1');
+    let pager = parseInt( req.query.page as string || '1');
+    const page = ( 0 < pager) ? pager : 1;
     const repository = getManager().getRepository(User);
     await repository.findAndCount({
         take,
@@ -58,7 +59,7 @@ export const createUser = async (req: Request, res: Response ) => {
 
 
     export const UpdateUser = async (req: Request, res: Response) => {
-        const id:any = req.params.id;
+        const id = parseInt(req.params.id);
         const {email, username, roleId} = req.body;
     
         const {error} = updateInfoValidation.validate({
@@ -87,7 +88,7 @@ export const createUser = async (req: Request, res: Response ) => {
     };
     
     export const getOneUser = async (req: Request, res: Response) => {
-        const id:any = req.params.id;
+        const id = parseInt(req.params.id);
         const repository = getManager().getRepository(User);
         await repository.findOne({ where :{id : id}, relations: { role: true} }).then((result) => {
             return res.status(200).send({            
@@ -99,7 +100,7 @@ export const createUser = async (req: Request, res: Response ) => {
     };
 
     export const DeleteUser = async (req: Request, res: Response ) => { 
-        const id:any = req.params.id;
+        const id = parseInt(req.params.id);
         const repository = getManager().getRepository(User);
         await repository.delete({id : id}).then((result) => {
             return res.status(200).send(result)

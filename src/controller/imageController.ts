@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import multer from "multer";
-import { extname } from "path";
+import path, { extname } from "path";
 
-export const UploadImage = async (req: Request, res: Response, next) => { 
+export const UploadFile = async (req: Request, res: Response, next) => { 
     const storage = multer.diskStorage({
         destination: "./upload",
         filename( req, file, callback) {
@@ -21,7 +21,7 @@ export const UploadImage = async (req: Request, res: Response, next) => {
         })
     })
 }
-export const UploadFile = async (req: Request, res: Response, next) => { 
+export const UploadImage = async (req: Request, res: Response, next) => { 
     const storage = multer.diskStorage({
         destination: "./upload/courses",
         filename( req, file, callback) {
@@ -29,7 +29,17 @@ export const UploadFile = async (req: Request, res: Response, next) => {
             return callback(null, `${randomName}-image${extname(file.originalname)}`)
         },
     });
-    const upload = multer({storage}).single('image');
+    const upload = multer({storage,     
+        fileFilter: function (req, file, callback) {
+        var ext = path.extname(file.originalname);
+        if(ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
+            return callback(new Error('Only images are allowed'))
+        }
+        callback(null, true)
+    },
+    limits:{
+        fileSize: 1024 * 1024
+    }}).single('image');
 
     upload(req, res, (err)=> {
         if (err) {
