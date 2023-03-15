@@ -39,14 +39,16 @@ export const UploadImage = async (req: Request, res: Response, next) => {
     },
     limits:{
         fileSize: 1024 * 1024
-    }}).single('image');
+    }}).single('upload');
 
     upload(req, res, (err)=> {
         if (err) {
             return res.status(400).send(err)
         }
         return res.send({
-            url : `http://localhost:8000/api/uploads/courses/${req.file.filename}`
+            url : `/api/uploads/courses/${req.file.filename}`,
+            fileName: req.file.filename,
+            uploaded: 1,
         })
     })
 }

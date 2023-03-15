@@ -9,9 +9,11 @@ export const fetchAllCourse = async (req: Request, res: Response ) => {
     const repository = getManager().getRepository(Course);
     await repository.findAndCount({
         take,
-        skip: (page - 1 ) * take
+        skip: (page - 1 ) * take,
+        relations: ['courseCat', "courseitem"]
     }).then((result) => {
         const [data, total] = result;
+        console.log(data)
         return res.status(200).render('course/index', {
             data,
             meta: {

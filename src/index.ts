@@ -4,10 +4,18 @@ import  cors  from "cors";
 import { routes } from "./routes";
 import { createConnection } from "typeorm";
 import cookieParser from "cookie-parser";
+import sessions from "express-session";
 
 createConnection().then((connection) => {
     const app = express();
+    const oneDay : number = 1000 * 60 * 60 * 24;
     app.use(cookieParser());
+    app.use(sessions({
+        secret: "thisismysecrctekeyfhrgfgrfrty84fwir767bestoftheworld",
+        saveUninitialized:true,
+        cookie: { maxAge: oneDay },
+        resave: false
+    }));
     app.use(express.json());
     app.set('view engine', 'ejs');
     app.use(cors({

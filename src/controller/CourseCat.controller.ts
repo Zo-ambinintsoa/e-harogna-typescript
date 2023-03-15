@@ -27,14 +27,13 @@ export const fetchAllCourseCat = async (req: Request, res: Response ) => {
 };
 
 export const createCourseCat = async (req: Request, res: Response ) => {
-    const {title, description, image, price} = req.body;
+    const {title, description, image} = req.body;
 
         const repository = getManager().getRepository(CourseCat);
         await repository.save({
             title: title,
             description: description,
             image: image,
-            price: price
             }).then((result) => {
                 return res.send(result);
             }).catch((err) => {

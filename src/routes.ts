@@ -21,9 +21,11 @@ export const routes = (router: Router )=>{
         res.render('courseItems/index');
     });
 
-    router.get('/createcourse', function(req , res) {
-
+    router.get('/course/create', function(req , res) {
         res.render('Course/create');
+    });
+   router.get('/sm', function(req , res) {
+        res.render('summernote');
     });
 
     router.post('/api/register', Register)
@@ -49,13 +51,7 @@ export const routes = (router: Router )=>{
     router.put('/api/role/:id', authMiddleware, permissionMiddleware('Role'), UpdateRole)
     router.delete('/api/role/:id', authMiddleware, permissionMiddleware('Role'), DeleteRole)
 
-    router.post('/api/upload', authMiddleware, UploadImage)
+    router.post('/api/upload', UploadImage)
     router.use('/api/uploads', express.static('./upload'))
     router.use('/assets', express.static('./assets'))
-
-    // router.get('/api/product', authMiddleware, permissionMiddleware('Product'), fetchAllProduct)
-    // router.get('/api/product/:id', authMiddleware,  permissionMiddleware('Product'), getOneProduct)
-    // router.post('/api/product', authMiddleware, permissionMiddleware('Product'), createProduct)
-    // router.put('/api/product/:id', authMiddleware, permissionMiddleware('Product'), UpdateProduct)
-    // router.delete('/api/product/:id', authMiddleware, permissionMiddleware('Product'), DeleteProduct)
 }
