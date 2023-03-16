@@ -1,21 +1,22 @@
 import { Request, Response } from "express";
 import { getManager } from "typeorm";
-import { CourseCat } from "../entity/courseCat.entity";
+import { Job } from "../entity/job.entity";
 
 
-
-export const fetchAllCourseCat = async (req: Request, res: Response ) => {
+export const fetchAllJob = async (req: Request, res: Response ) => {
     const take = 10;
     const page = parseInt( req.query.page as string || '1');
-    const repository = getManager().getRepository(CourseCat);
+    const repository = getManager().getRepository(Job);
     await repository.findAndCount({
         take,
-        skip: (page - 1 ) * take
+        skip: (page - 1 ) * take,
+        relations: ['courseCat', "courseitem"]
     }).then((result) => {
         const [data, total] = result;
-        return res.status(200).render('CourseCategory/index', {
+        console.log(data)
+        return res.status(200).render('course/index', {
             data,
-            page_name: "liste2",
+            page_name: "liste1",
             meta: {
                 total,
                 page,
@@ -27,16 +28,16 @@ export const fetchAllCourseCat = async (req: Request, res: Response ) => {
     });
 };
 
-export const createCourseCatView = async (req:Request, res: Response) => {
-    return res.render('CourseCategory/create', {
+export const createJobView = async (req:Request, res: Response) => {
+    return res.render('Job/create', {
         page_name: "createcourse"
     });
 }
 
-export const createCourseCat = async (req: Request, res: Response ) => {
+export const createJob = async (req: Request, res: Response ) => {
     const {title, description, image} = req.body;
 
-        const repository = getManager().getRepository(CourseCat);
+        const repository = getManager().getRepository(Job);
         await repository.save({
             title: title,
             description: description,
@@ -49,11 +50,11 @@ export const createCourseCat = async (req: Request, res: Response ) => {
     };
 
 
-    export const UpdateCourseCat = async (req: Request, res: Response) => {
+    export const UpdateJob = async (req: Request, res: Response) => {
         const id = req.params.id;
-        const {title, description, image, price} = req.body;
+        const {title, description, image} = req.body;
 
-        const repository = getManager().getRepository(CourseCat);
+        const repository = getManager().getRepository(Job);
         await repository.update( {id: parseInt(id)}, {
             title: title,
             description: description,
@@ -68,9 +69,9 @@ export const createCourseCat = async (req: Request, res: Response ) => {
         });
     };
     
-    export const getOneCourseCat = async (req: Request, res: Response) => {
+    export const getOneJob = async (req: Request, res: Response) => {
         const id = req.params.id;
-        const repository = getManager().getRepository(CourseCat);
+        const repository = getManager().getRepository(Job);
         await repository.findOne({ where :{id : parseInt(id)} }).then((result) => {
             return res.status(200).send({            
                 result
@@ -80,9 +81,9 @@ export const createCourseCat = async (req: Request, res: Response ) => {
         });
     };
 
-    export const DeleteCourseCat = async (req: Request, res: Response ) => { 
+    export const DeleteJob = async (req: Request, res: Response ) => { 
         const id = req.params.id;
-        const repository = getManager().getRepository(CourseCat);
+        const repository = getManager().getRepository(Job);
         await repository.delete({id : parseInt(id)}).then((result) => {
             return res.status(200).send(result)
         }).catch((err) => {

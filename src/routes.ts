@@ -1,5 +1,6 @@
 import express, {Router} from 'express';
 import { authenticatedUser, Login, Logout, Register, UpdateInfo, UpdatePassword } from './controller/authController';
+import { createCourseCat, createCourseCatView, DeleteCourseCat, fetchAllCourseCat, UpdateCourseCat } from './controller/CourseCat.controller';
 import { createCourse, createCourseView, DeleteCourse, fetchAllCourse, UpdateCourse } from './controller/CourseController';
 import { UploadImage } from './controller/imageController';
 import { fetchPermission } from './controller/permissionController';
@@ -21,6 +22,13 @@ export const routes = (router: Router )=>{
     router.post('api/course/create', createCourse);
     router.put('/api/course/:id', UpdateCourse );
     router.delete('/api/course/:id', DeleteCourse );
+
+
+    router.get('/categories', fetchAllCourseCat );
+    router.get('/category/create', createCourseCatView);
+    router.post('api/category/create', createCourseCat);
+    router.put('/api/category/:id', UpdateCourseCat );
+    router.delete('/api/category/:id', DeleteCourseCat );
 
 
     router.post('/api/register', Register)

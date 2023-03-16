@@ -17,7 +17,7 @@ export class Course {
     image: String;
 
     @Column()
-    price: Number;
+    IsPublished: Boolean;
 
     @ManyToOne(() => CourseCat, (courseCat) => courseCat.courses)
     courseCat: CourseCat;

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { getManager } from "typeorm";
 import { Course } from "../entity/course.entity";
+import { CourseCat } from "../entity/courseCat.entity";
 
 
 export const fetchAllCourse = async (req: Request, res: Response ) => {
@@ -29,20 +30,30 @@ export const fetchAllCourse = async (req: Request, res: Response ) => {
 };
 
 export const createCourseView = async (req:Request, res: Response) => {
-    return res.render('Course/create', {
-        page_name: "createcourse"
-    });
+    const repository = getManager().getRepository(CourseCat);
+    try {
+        const cat = await repository.find();
+        return res.render('Course/create', {
+            page_name: "createcourse",
+            cat
+        });
+    } catch (error) {
+        return res.status(500).send(error);
+    }
+
 }
 
 export const createCourse = async (req: Request, res: Response ) => {
-    const {title, description, image, price} = req.body;
+    const {title, description, image, category} = req.body;
 
         const repository = getManager().getRepository(Course);
         await repository.save({
             title: title,
             description: description,
             image: image,
-            price: price
+            courseCat: {
+                id: category
+            }
             }).then((result) => {
                 return res.send(result);
             }).catch((err) => {
@@ -53,14 +64,16 @@ export const createCourse = async (req: Request, res: Response ) => {
 
     export const UpdateCourse = async (req: Request, res: Response) => {
         const id = req.params.id;
-        const {title, description, image, price} = req.body;
+        const {title, description, image, category} = req.body;
 
         const repository = getManager().getRepository(Course);
         await repository.update( {id: parseInt(id)}, {
             title: title,
             description: description,
             image: image,
-            price: price
+            courseCat: {
+                id: category
+            }
             }).then((result) => {
             return res.status(200).send({
                 message: 'Info updated',

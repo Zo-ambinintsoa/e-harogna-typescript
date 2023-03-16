@@ -38,10 +38,10 @@
 	</svg>
 	                             </span><!--//submenu-arrow-->
                     </a><!--//nav-link-->
-                    <div id="submenu" class="collapse submenu submenu <%if(page_name === 'liste1'){%>show<%}%>" data-bs-parent="#menu-accordion">
+                    <div id="submenu" class="collapse submenu submenu <%if(page_name === 'liste1' || page_name === 'liste2' ){%>show<%}%>" data-bs-parent="#menu-accordion">
                         <ul class="submenu-list list-unstyled">
-                            <li class="submenu-item "><a class="submenu-link <%if(page_name === 'liste1'){%>active<%}%>" href="/courses">Listes</a></li>
-                            <li class="submenu-item"><a class="submenu-link" href="/categories">Categories</a></li>
+                            <li class="submenu-item "><a class="submenu-link <%if(page_name === 'liste1' ){%>active<%}%>" href="/courses">Listes</a></li>
+                            <li class="submenu-item"><a class="submenu-link <%if(page_name === 'liste2'){%>active<%}%>"" href="/categories">Categories</a></li>
                             <li class="submenu-item"><a class="submenu-link" href="/files">Fichiers</a></li>
                         </ul>
                     </div>
