@@ -1,4 +1,4 @@
-import {Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import { CourseCat } from "./courseCat.entity";
 import { CourseItem } from "./courseItem.entity";
 
@@ -10,7 +10,7 @@ export class Course {
     @Column()
     title: String;
 
-    @Column()
+    @Column("longtext")
     description: String;
 
     @Column()

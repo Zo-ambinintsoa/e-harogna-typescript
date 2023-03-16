@@ -16,6 +16,7 @@ export const fetchAllCourse = async (req: Request, res: Response ) => {
         console.log(data)
         return res.status(200).render('course/index', {
             data,
+            page_name: "liste1",
             meta: {
                 total,
                 page,
@@ -26,6 +27,12 @@ export const fetchAllCourse = async (req: Request, res: Response ) => {
         return res.status(500).send(err);
     });
 };
+
+export const createCourseView = async (req:Request, res: Response) => {
+    return res.render('Course/create', {
+        page_name: "createcourse"
+    });
+}
 
 export const createCourse = async (req: Request, res: Response ) => {
     const {title, description, image, price} = req.body;

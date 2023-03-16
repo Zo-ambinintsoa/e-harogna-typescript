@@ -1,35 +1,31 @@
 import express, {Router} from 'express';
 import { authenticatedUser, Login, Logout, Register, UpdateInfo, UpdatePassword } from './controller/authController';
-import { fetchAllCourse } from './controller/CourseController';
+import { createCourse, createCourseView, DeleteCourse, fetchAllCourse, UpdateCourse } from './controller/CourseController';
 import { UploadImage } from './controller/imageController';
 import { fetchPermission } from './controller/permissionController';
 import { createRole, DeleteRole, fetchRole, getOneRole, UpdateRole } from './controller/roleController';
 import { createUser, DeleteUser, fetchAllUser, getOneUser, UpdateUser } from './controller/userController';
-import { Course } from './entity/course.entity';
 import { authMiddleware } from './middleware/auth.middleware';
 import { permissionMiddleware } from './middleware/permission.middleware';
 
 export const routes = (router: Router )=>{
 
     router.get('/', function(req , res) {
-        res.render('pages/Home');
+        res.render('pages/Home', {
+            page_name: "acceuil"
+        });
     });
 
     router.get('/courses', fetchAllCourse );
+    router.get('/course/create', createCourseView);
+    router.post('api/course/create', createCourse);
+    router.put('/api/course/:id', UpdateCourse );
+    router.delete('/api/course/:id', DeleteCourse );
 
-    router.get('/coursesfile', function(req , res) {
-        res.render('courseItems/index');
-    });
-
-    router.get('/course/create', function(req , res) {
-        res.render('Course/create');
-    });
-   router.get('/sm', function(req , res) {
-        res.render('summernote');
-    });
 
     router.post('/api/register', Register)
     router.post('/api/login', Login)
+    
     router.get('/api/user', authMiddleware, authenticatedUser)
     router.post('/api/logout', authMiddleware, Logout)
     router.put('/api/user/update', authMiddleware, UpdateInfo)
@@ -39,7 +35,7 @@ export const routes = (router: Router )=>{
     router.get('/api/users', authMiddleware, permissionMiddleware('User'), fetchAllUser)
     router.get('/api/users/:id', authMiddleware, permissionMiddleware('User'), getOneUser)
     router.post('/api/users', authMiddleware, permissionMiddleware('User'), createUser)
-    router.put('/api/users/:id', authMiddleware,permissionMiddleware('User'),  UpdateUser)
+    router.put('/api/users/:id', authMiddleware, permissionMiddleware('User'),  UpdateUser)
     router.delete('/api/users/:id', authMiddleware, permissionMiddleware('User'), DeleteUser)
 
 
