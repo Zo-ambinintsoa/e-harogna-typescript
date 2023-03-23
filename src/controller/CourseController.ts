@@ -6,9 +6,10 @@ import { CourseCat } from "../entity/courseCat.entity";
 
 export const fetchAllCourse = async (req: Request, res: Response ) => {
     const take = 10;
-    const page = parseInt( req.query.page as string || '1');
+    const page = (parseInt( req.query.page as string || '1')<0)?1 :parseInt( req.query.page as string || '1');
     const repository = getManager().getRepository(Course);
     await repository.findAndCount({
+        
         take,
         skip: (page - 1 ) * take,
         relations: ['courseCat', "courseitem"]
@@ -35,7 +36,7 @@ export const createCourseView = async (req:Request, res: Response) => {
         const cat = await repository.find();
         return res.render('Course/create', {
             page_name: "createcourse",
-            cat
+            data: cat
         });
     } catch (error) {
         return res.status(500).send(error);
@@ -44,18 +45,18 @@ export const createCourseView = async (req:Request, res: Response) => {
 }
 
 export const createCourse = async (req: Request, res: Response ) => {
-    const {title, description, image, category} = req.body;
-
+    const {title, description, imgUrl, category} = req.body;
+        console.log(description);
         const repository = getManager().getRepository(Course);
         await repository.save({
             title: title,
-            description: description,
-            image: image,
+            description: description.toString(),
+            image: imgUrl,
             courseCat: {
-                id: category
+                id: parseInt(category || "1")
             }
             }).then((result) => {
-                return res.send(result);
+                return res.redirect('back');
             }).catch((err) => {
                 return res.status(500).send(err);
             });
@@ -69,7 +70,7 @@ export const createCourse = async (req: Request, res: Response ) => {
         const repository = getManager().getRepository(Course);
         await repository.update( {id: parseInt(id)}, {
             title: title,
-            description: description,
+            description: description.toString(),
             image: image,
             courseCat: {
                 id: category
@@ -88,8 +89,9 @@ export const createCourse = async (req: Request, res: Response ) => {
         const id = req.params.id;
         const repository = getManager().getRepository(Course);
         await repository.findOne({ where :{id : parseInt(id)} }).then((result) => {
-            return res.status(200).send({            
-                result
+            return res.render('Course/Show', {
+                page_name: "createcourse",
+                data: result
             });
         }).catch((err) => {
             return res.status(500).send(err);

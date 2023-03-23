@@ -1,8 +1,8 @@
 import express, {Router} from 'express';
 import { authenticatedUser, Login, Logout, Register, UpdateInfo, UpdatePassword } from './controller/authController';
 import { createCourseCat, createCourseCatView, DeleteCourseCat, fetchAllCourseCat, UpdateCourseCat } from './controller/CourseCat.controller';
-import { createCourse, createCourseView, DeleteCourse, fetchAllCourse, UpdateCourse } from './controller/CourseController';
-import { UploadImage } from './controller/imageController';
+import { createCourse, createCourseView, DeleteCourse, fetchAllCourse, getOneCourse, UpdateCourse } from './controller/CourseController';
+import { UploadFile, UploadImage } from './controller/imageController';
 import { fetchPermission } from './controller/permissionController';
 import { createRole, DeleteRole, fetchRole, getOneRole, UpdateRole } from './controller/roleController';
 import { createUser, DeleteUser, fetchAllUser, getOneUser, UpdateUser } from './controller/userController';
@@ -16,19 +16,39 @@ export const routes = (router: Router )=>{
             page_name: "acceuil"
         });
     });
+    router.get('/login', function(req , res) {
+        res.render('Auth/login', {
+            page_name: "login"
+        });
+    });
+    router.get('/register', function(req , res) {
+        res.render('Auth/register', {
+            page_name: "register"
+        });
+    });
 
-    router.get('/courses', fetchAllCourse );
+    router.get('/courses', authMiddleware, fetchAllCourse );
     router.get('/course/create', createCourseView);
-    router.post('api/course/create', createCourse);
+    router.post('/api/course/create', UploadFile, createCourse);
     router.put('/api/course/:id', UpdateCourse );
+    router.get('/course/view/:id', getOneCourse );
     router.delete('/api/course/:id', DeleteCourse );
 
 
     router.get('/categories', fetchAllCourseCat );
     router.get('/category/create', createCourseCatView);
-    router.post('api/category/create', createCourseCat);
+    router.post('api/category/create', UploadImage, createCourseCat);
     router.put('/api/category/:id', UpdateCourseCat );
     router.delete('/api/category/:id', DeleteCourseCat );
+
+
+    router.get('/jobs', fetchAllCourseCat );
+    router.get('/job/create', createCourseCatView);
+    router.post('api/job/create', UploadImage, createCourseCat);
+    router.put('/api/job/:id', UpdateCourseCat );
+    router.delete('/api/job/:id', DeleteCourseCat );
+
+
 
 
     router.post('/api/register', Register)

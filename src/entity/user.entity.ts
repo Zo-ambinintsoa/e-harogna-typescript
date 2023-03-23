@@ -1,4 +1,5 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { CourseLike } from "./CourseLike.entity";
 import { Role } from "./role.entity";
 
 @Entity()
@@ -19,6 +20,9 @@ export class User {
 
     @Column()
     password: string;
+
+    @OneToMany(() => CourseLike, (courseLike) => courseLike.course)
+    likes: CourseLike[]
 
     @ManyToOne(() => Role)
     @JoinColumn({name: "roleId"})

@@ -6,23 +6,24 @@ import bcryptjs from 'bcryptjs';
 import { sign } from "jsonwebtoken";
 
 export const Register = async (req: Request, res: Response ) => {
-const body = req.body;
-
+const { email, confirmPassword, password} = req.body;
+ 
     const {error} = RegisterValidation.validate({
-        username: body.username,
-        email: body.email,
-        password: body.password,
-        passwordConf: body.confirmPassword
+        // username: username,
+        email: email,
+        password: password,
+        passwordConf: confirmPassword
     });
   
     if (error) {
         return res.status(400).send(error.details)
     }
+    let username = email.split('@')[0];
     const repository = getManager().getRepository(User);
     await repository.save({
-        email: body.email,
-        username: body.username,
-        password: await bcryptjs.hash(body.password, 10)
+        email: email,
+        username: username,
+        password: await bcryptjs.hash(password, 10)
         }).then((result) => {
             const {password , ...user} = result;
             return res.send(user);
@@ -32,18 +33,18 @@ const body = req.body;
 };
 
 export const Login = async (req: Request, res: Response) => {
-// const { email, passwords, rememberMe } = req.body;
-    const email :string = req.body?.username;
-    const password :string = req.body.password;
+// const { email, password, rememberMe } = req.body;
+    const email :string = req.body.email;
+    const password :string = req.body.password;    
+    
+    if(req.session['uId']) req.session['uId'].destroy();
 
     const repository = getManager().getRepository(User);
-    await  repository.findOneBy([{email : email},{ username: email }]).then( async (result) => {
+    await  repository.findOneBy([{email : email} ,{ username: email }]).then( async (result) => {
         if (!result || !Object.keys(result).length) {
             // throw new Error("userNotFound");
             // console.log("user not found")
-            return res.status(404).send({
-                message : "user not found"
-            })
+            return res.status(404)
         }        
         if (!await bcryptjs.compare(password, result.password)) {
             // throw new Error("passwordError");
@@ -57,16 +58,14 @@ export const Login = async (req: Request, res: Response) => {
         };
         const token = sign( payload , process.env.SECRETE_TOKEN)
 
-
         res.cookie("jwt", token, {
             httpOnly: true,
             maxAge: 24 * 26 * 60 * 1000 // 1 days 
         })
 
+        req.session['uId'] = payload
 
-        return res.status(200).send({
-            message : "Logged in"
-        })
+        return res.status(200).redirect('/')
         
     }).catch( (err) => {
         console.log(err)
@@ -77,7 +76,7 @@ export const Login = async (req: Request, res: Response) => {
 export const authenticatedUser = async (req: Request, res: Response) => {
     try {
         const repository = getManager().getRepository(User);
-        await  repository.findOneBy({id : req['uId']})
+        await  repository.findOneBy({id : req.session['uId'].id})
         .then( async (result) => { 
             if (!result) {
                 return res.status(401).send({
@@ -103,7 +102,7 @@ export const authenticatedUser = async (req: Request, res: Response) => {
 
 
 export const UpdateInfo = async (req: Request, res: Response) => {
-    const id = req['uId'];
+    const id = req.session['uId'].id;
     const {email, username} = req.body;
 
     const {error} = updateInfoValidation.validate({
@@ -128,7 +127,7 @@ if (error) {
     });
 }
 export const UpdatePassword = async (req: Request, res: Response) => {
-    const id = req['uId'];
+    const id = req.session['uId'].id;
     let user ;
     const {oldPass, newpass, passwordConf} = req.body;
 
@@ -171,6 +170,7 @@ export const UpdatePassword = async (req: Request, res: Response) => {
 
 export const Logout = async (req: Request, res: Response) => {
     res.clearCookie('jwt');
+    req.session['uId'].destroy();
     res.status(200).send({
         message: 'logout'
     });

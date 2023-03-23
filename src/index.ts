@@ -1,15 +1,18 @@
 require("dotenv").config();
-import  express, {Request, Response} from "express";
+import  express from "express";
 import  cors  from "cors";
 import { routes } from "./routes";
 import { createConnection } from "typeorm";
 import cookieParser from "cookie-parser";
 import sessions from "express-session";
+import bodyParser from "body-parser";
 
 createConnection().then((connection) => {
     const app = express();
     const oneDay : number = 1000 * 60 * 60 * 24;
     app.use(cookieParser());
+    app.use(bodyParser.urlencoded({ extended: false }));
+    app.use(bodyParser.json());
     app.use(sessions({
         secret: "thisismysecrctekeyfhrgfgrfrty84fwir767bestoftheworld",
         saveUninitialized:true,
@@ -30,6 +33,10 @@ createConnection().then((connection) => {
     app.use(function(error, req, res, next) {
         res.status(500).
         render('500', {title:'500: Internal Server Error', error: error});
+    });
+    app.use(function(error, req, res, next) {
+        res.status(401).
+        render('Auth/login', {title:'Autentification'});
     });
     app.listen(8000, ()=>{
     console.log("listening in port 8000");
