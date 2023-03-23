@@ -1,7 +1,7 @@
 import express, {Router} from 'express';
 import { authenticatedUser, Login, Logout, Register, UpdateInfo, UpdatePassword } from './controller/authController';
 import { createCourseCat, createCourseCatView, DeleteCourseCat, fetchAllCourseCat, UpdateCourseCat } from './controller/CourseCat.controller';
-import { createCourse, createCourseView, DeleteCourse, fetchAllCourse, getOneCourse, UpdateCourse } from './controller/CourseController';
+import { createCourse, createCourseView, DeleteCourse, fetchAllCourse, fetchAllCourseFront, fetchOneCourseFront, getOneCourse, UpdateCourse } from './controller/CourseController';
 import { fetchAllfile, UploadFile, UploadImage } from './controller/imageController';
 import { fetchPermission } from './controller/permissionController';
 import { createRole, DeleteRole, fetchRole, getOneRole, UpdateRole } from './controller/roleController';
@@ -24,10 +24,22 @@ export const routes = (router: Router )=>{
             title: 'S\'inscrire'
         });
     });
+
+    router.get('/blog', fetchAllCourseFront);
+    router.get('/blog/:id', fetchOneCourseFront);
     
     
-    router.get('/', authMiddleware, function(req , res) {
-        res.render('pages/Home', {
+    router.get('/', function(req , res) {
+        const jwt = req.session['uId'];
+        // const payload: any = verify(jwt, process.env.SECRETE_TOKEN)
+        if (!jwt) {
+            return res.render('pages/homepage', {
+                page_name: "acceuil",
+                title: 'acceuille'
+            });
+        }
+
+        return res.render('pages/Home', {
             page_name: "acceuil",
             title: 'acceuille'
         });

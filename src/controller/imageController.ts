@@ -44,7 +44,8 @@ export const UploadFile = async (req: Request, res: Response, next: Function) =>
         }
         next()
     })
-}
+};
+
 export const UploadImage = async (req: Request, res: Response, next: Function) => { 
     const storage = multer.diskStorage({
         destination: "./upload/courses",

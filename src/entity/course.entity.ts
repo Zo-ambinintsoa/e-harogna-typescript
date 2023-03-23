@@ -11,6 +11,12 @@ export class Course {
     @Column()
     title: String;
 
+    @Column()
+    readTime: String;
+
+    @Column()
+    slug: String;
+
     @Column("longtext")
     description: String;
 

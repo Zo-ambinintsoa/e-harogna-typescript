@@ -2,9 +2,10 @@ import { Request, Response } from "express";
 import { getManager } from "typeorm";
 import { Course } from "../entity/course.entity";
 import { CourseCat } from "../entity/courseCat.entity";
+import readingTime from "reading-time";
 
 
-export const fetchAllCourse = async (req: Request, res: Response ) => {
+export const fetchAllCourse = async (req: Request, res: Response) => {
     const take = 10;
     const page = (parseInt( req.query.page as string || '1')<0)?1 :parseInt( req.query.page as string || '1');
     const repository = getManager().getRepository(Course);
@@ -15,8 +16,34 @@ export const fetchAllCourse = async (req: Request, res: Response ) => {
         relations: ['courseCat', "courseitem"]
     }).then((result) => {
         const [data, total] = result;
-        console.log(data)
+        // console.log(data)
         return res.status(200).render('course/index', {
+            data,
+            page_name: "liste1",
+            meta: {
+                total,
+                page,
+                last_page: Math.ceil(total / take)
+            }
+        })
+    }).catch((err) => {
+        return res.status(500).send(err);
+    });
+};
+
+export const fetchAllCourseFront = async (req: Request, res: Response) => {
+    const take = 10;
+    const page = (parseInt( req.query.page as string || '1')<0)?1 :parseInt( req.query.page as string || '1');
+    const repository = getManager().getRepository(Course);
+    await repository.findAndCount({
+        
+        take,
+        skip: (page - 1 ) * take,
+        relations: ['courseCat', "courseitem"]
+    }).then((result) => {
+        const [data, total] = result;
+        // console.log(data)
+        return res.status(200).render('pages/blogpage', {
             data,
             page_name: "liste1",
             meta: {
@@ -46,12 +73,16 @@ export const createCourseView = async (req:Request, res: Response) => {
 
 export const createCourse = async (req: Request, res: Response ) => {
     const {title, description, imgUrl, category} = req.body;
+    const slug :string = titleToSlug(title)
+    const readTime = readingTime(description.toString()).text
         console.log(description);
         const repository = getManager().getRepository(Course);
         await repository.save({
             title: title,
             description: description.toString(),
             image: imgUrl,
+            readTime,
+            slug,
             courseCat: {
                 id: parseInt(category || "1")
             }
@@ -65,13 +96,20 @@ export const createCourse = async (req: Request, res: Response ) => {
 
     export const UpdateCourse = async (req: Request, res: Response) => {
         const id = req.params.id;
+
         const {title, description, image, category} = req.body;
+
+        const slug :string = titleToSlug(title)
+
+        const readTime = readingTime(description.toString()).text
 
         const repository = getManager().getRepository(Course);
         await repository.update( {id: parseInt(id)}, {
             title: title,
             description: description.toString(),
             image: image,
+            readTime,
+            slug,
             courseCat: {
                 id: category
             }
@@ -98,6 +136,19 @@ export const createCourse = async (req: Request, res: Response ) => {
         });
     };
 
+    export const fetchOneCourseFront = async (req: Request, res: Response) => {
+        const id = req.params.id || '1';
+        const repository = getManager().getRepository(Course);
+        await repository.findOne({ where :{id : parseInt(id)} }).then((result) => {
+            return res.render('pages/blogdetail', {
+                page_name: "createcourse",
+                data: result
+            });
+        }).catch((err) => {
+            return res.status(500).send(err);
+        });
+    };
+
     export const DeleteCourse = async (req: Request, res: Response ) => { 
         const id = req.params.id;
         const repository = getManager().getRepository(Course);
@@ -107,4 +158,29 @@ export const createCourse = async (req: Request, res: Response ) => {
             return res.status(500).send(err);
         });
     }
+
+    const titleToSlug = ( title:string ) :string => {
+        let slug :string;
+    
+        // convert to lower case
+        slug = title.toLowerCase();
+    
+        // remove special characters
+        slug = slug.replace(/\`|\~|\!|\@|\#|\||\$|\%|\^|\&|\*|\(|\)|\+|\=|\,|\.|\/|\?|\>|\<|\'|\"|\:|\;|_/gi, '');
+        // The /gi modifier is used to do a case insensitive search of all occurrences of a regular expression in a string
+    
+        // replace spaces with dash symbols
+        slug = slug.replace(/ /gi, "-");
+        
+        // remove consecutive dash symbols 
+        slug = slug.replace(/\-\-\-\-\-/gi, '-');
+        slug = slug.replace(/\-\-\-\-/gi, '-');
+        slug = slug.replace(/\-\-\-/gi, '-');
+        slug = slug.replace(/\-\-/gi, '-');
+    
+        // remove the unwanted dash symbols at the beginning and the end of the slug
+        slug = '@' + slug + '@';
+        slug = slug.replace(/\@\-|\-\@|\@/gi, '');
+        return slug;
+    };
 
