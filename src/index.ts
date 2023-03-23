@@ -30,6 +30,7 @@ createConnection().then((connection) => {
         
         app.use((req, res, next) => {
             res.locals.message = req.flash();
+            res.locals.user = req.session['uId'];
             next()
         })
    

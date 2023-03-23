@@ -2,7 +2,7 @@ import express, {Router} from 'express';
 import { authenticatedUser, Login, Logout, Register, UpdateInfo, UpdatePassword } from './controller/authController';
 import { createCourseCat, createCourseCatView, DeleteCourseCat, fetchAllCourseCat, UpdateCourseCat } from './controller/CourseCat.controller';
 import { createCourse, createCourseView, DeleteCourse, fetchAllCourse, getOneCourse, UpdateCourse } from './controller/CourseController';
-import { UploadFile, UploadImage } from './controller/imageController';
+import { fetchAllfile, UploadFile, UploadImage } from './controller/imageController';
 import { fetchPermission } from './controller/permissionController';
 import { createRole, DeleteRole, fetchRole, getOneRole, UpdateRole } from './controller/roleController';
 import { createUser, DeleteUser, fetchAllUser, getOneUser, UpdateUser } from './controller/userController';
@@ -11,38 +11,44 @@ import { permissionMiddleware } from './middleware/permission.middleware';
 
 export const routes = (router: Router )=>{
 
-    router.get('/', function(req , res) {
-        res.render('pages/Home', {
-            page_name: "acceuil",
-            title: 'acceuille'
-        });
-    });
     router.get('/login', function(req , res) {
         res.render('Auth/login', {
             page_name: "login",
-            title: 'Authentification'
+            title: 'S\'Authentification'
         });
     });
+
     router.get('/register', function(req , res) {
         res.render('Auth/register', {
             page_name: "register",
             title: 'S\'inscrire'
         });
     });
+    
+    
+    router.get('/', authMiddleware, function(req , res) {
+        res.render('pages/Home', {
+            page_name: "acceuil",
+            title: 'acceuille'
+        });
+    });
+
+    router.get('/files', authMiddleware, fetchAllfile);
 
     router.get('/courses', authMiddleware, fetchAllCourse );
-    router.get('/course/create', createCourseView);
-    router.post('/api/course/create', UploadFile, createCourse);
-    router.put('/api/course/:id', UpdateCourse );
-    router.get('/course/view/:id', getOneCourse );
-    router.delete('/api/course/:id', DeleteCourse );
+    router.get('/course/create', authMiddleware, createCourseView);
+    router.post('/api/course/create', authMiddleware, UploadFile, createCourse);
+    router.put('/api/course/:id', authMiddleware , UpdateCourse );
+    router.get('/course/view/:id', authMiddleware, getOneCourse );
+    router.delete('/api/course/:id', authMiddleware, DeleteCourse );
 
 
-    router.get('/categories', fetchAllCourseCat );
-    router.get('/category/create', createCourseCatView);
-    router.post('api/category/create', UploadImage, createCourseCat);
-    router.put('/api/category/:id', UpdateCourseCat );
-    router.delete('/api/category/:id', DeleteCourseCat );
+    router.get('/categories', authMiddleware, fetchAllCourseCat );
+    
+    router.get('/category/create', authMiddleware, createCourseCatView);
+    router.post('api/category/create', authMiddleware, UploadImage, createCourseCat);
+    router.put('/api/category/:id', authMiddleware, UpdateCourseCat );
+    router.delete('/api/category/:id', authMiddleware, DeleteCourseCat );
 
 
     router.get('/jobs', fetchAllCourseCat );

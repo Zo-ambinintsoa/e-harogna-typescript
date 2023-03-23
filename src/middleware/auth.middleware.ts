@@ -10,6 +10,7 @@ export const authMiddleware = async (req: Request, res: Response, next : Functio
         const jwt = req.session['uId'];
         // const payload: any = verify(jwt, process.env.SECRETE_TOKEN)
         if (!jwt) {
+            req.flash('danger' , 'Vous-devez vous connecter avant de pouvoir acceder a cette page!')
             return res.status(401).redirect('/login');
         }
         // req['uId'] = jwt.id;

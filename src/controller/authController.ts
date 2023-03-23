@@ -65,7 +65,7 @@ export const Login = async (req: Request, res: Response) => {
 
         req.session['uId'] = payload
 
-        req.flash('success' , 'bien venue sur le Platform E-Harogna')
+        req.flash('success' , 'bienvenue sur le Platform E-Harogna')
         return res.status(200).redirect('/')
         
     }).catch( (err) => {
