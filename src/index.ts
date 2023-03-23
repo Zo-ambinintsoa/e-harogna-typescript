@@ -6,6 +6,7 @@ import { createConnection } from "typeorm";
 import cookieParser from "cookie-parser";
 import sessions from "express-session";
 import bodyParser from "body-parser";
+import flash from 'connect-flash';
 
 createConnection().then((connection) => {
     const app = express();
@@ -20,16 +21,25 @@ createConnection().then((connection) => {
         resave: false
     }));
     app.use(express.json());
+    app.use(flash());
     app.set('view engine', 'ejs');
     app.use(cors({
         credentials: true,
         origin: ["http://localhost:3000"]
         }));
-    routes(app);
+        
+        app.use((req, res, next) => {
+            res.locals.message = req.flash();
+            next()
+        })
+   
+        routes(app);
+    
     app.use((req, res, next) => {
         res.status(404).
         render('404', {title:'404: Page Note Found', errors: 'Page Not found'});
     })
+
     app.use(function(error, req, res, next) {
         res.status(500).
         render('500', {title:'500: Internal Server Error', error: error});

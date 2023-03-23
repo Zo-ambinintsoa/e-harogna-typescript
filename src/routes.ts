@@ -13,17 +13,20 @@ export const routes = (router: Router )=>{
 
     router.get('/', function(req , res) {
         res.render('pages/Home', {
-            page_name: "acceuil"
+            page_name: "acceuil",
+            title: 'acceuille'
         });
     });
     router.get('/login', function(req , res) {
         res.render('Auth/login', {
-            page_name: "login"
+            page_name: "login",
+            title: 'Authentification'
         });
     });
     router.get('/register', function(req , res) {
         res.render('Auth/register', {
-            page_name: "register"
+            page_name: "register",
+            title: 'S\'inscrire'
         });
     });
 
@@ -53,6 +56,7 @@ export const routes = (router: Router )=>{
 
     router.post('/api/register', Register)
     router.post('/api/login', Login)
+    router.get('/logout', Logout)
     
     router.get('/api/user', authMiddleware, authenticatedUser)
     router.post('/api/logout', authMiddleware, Logout)

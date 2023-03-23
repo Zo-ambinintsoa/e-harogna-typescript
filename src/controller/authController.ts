@@ -37,20 +37,20 @@ export const Login = async (req: Request, res: Response) => {
     const email :string = req.body.email;
     const password :string = req.body.password;    
     
-    if(req.session['uId']) req.session['uId'].destroy();
+    if(req.session['uId'] !== undefined) req.session['uId'].destroy();
 
     const repository = getManager().getRepository(User);
     await  repository.findOneBy([{email : email} ,{ username: email }]).then( async (result) => {
         if (!result || !Object.keys(result).length) {
             // throw new Error("userNotFound");
             // console.log("user not found")
-            return res.status(404)
+            req.flash('danger' , 'Les informations que vous avez fournie sont incorrects, s\'il vous plait reessayer')
+            return res.redirect('/login')
         }        
         if (!await bcryptjs.compare(password, result.password)) {
             // throw new Error("passwordError");
-            return res.status(400).send({
-                message : "Password incorrect"
-            })
+            req.flash('danger' , 'Les informations que vous avez fournie sont incorrects, s\'il vous plait reessayer')
+            return res.redirect('/login')
         }
         const payload = {
             id: result.id,
@@ -65,6 +65,7 @@ export const Login = async (req: Request, res: Response) => {
 
         req.session['uId'] = payload
 
+        req.flash('success' , 'bien venue sur le Platform E-Harogna')
         return res.status(200).redirect('/')
         
     }).catch( (err) => {
@@ -169,9 +170,10 @@ export const UpdatePassword = async (req: Request, res: Response) => {
 }
 
 export const Logout = async (req: Request, res: Response) => {
-    res.clearCookie('jwt');
-    req.session['uId'].destroy();
-    res.status(200).send({
-        message: 'logout'
+    // res.clearCookie('jwt');
+    req.session.destroy( function () {        
+        console.log('deconnecter');  
     });
+    // req.flash('success' , 'Mercie d\'avoir visiter le platform')
+    return res.redirect('/login')
 }
