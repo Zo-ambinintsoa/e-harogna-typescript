@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import nodemailer from "nodemailer";
+import Transport  from "nodemailer-sendinblue-transport";
+import sgMail  from '@sendgrid/mail'
 
 // async..await is not allowed in global scope, must use a wrapper
 export const sendmymail = async (req: Request, res: Response) => {
@@ -10,12 +12,12 @@ export const sendmymail = async (req: Request, res: Response) => {
 
   // create reusable transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({
-    host: "smtp-relay.sendinblue.com",
+    host: 'smtp.sendgrid.net',
     port: 587,
-    secure: false, // true for 465, false for other ports
+    // secure: false, // true for 465, false for other ports
     auth: {
-      user: "nambinintsoa577@gmail.com", // generated ethereal user
-      pass: "zFEI0wdCOjGJ3V1U", // generated ethereal password
+      user: "test-api", // generated ethereal user
+      pass: "", // generated ethereal password
     },
   });
 
@@ -23,7 +25,7 @@ export const sendmymail = async (req: Request, res: Response) => {
   let info = await transporter.sendMail({
     from: '"Fred Foo 👻" nambinintsoa577@gmail.com', // sender address
     to: "ambinintsoa.m.herizo@gmail.com", // list of receivers
-    subject: "Hello ✔", // Subject line
+    subject: "Hello best ooo ✔", // Subject line
     text: "Hello world?", // plain text body
     html: "<b>Hello world? how are you</b>", // html body
   });
@@ -39,5 +41,26 @@ export const sendmymail = async (req: Request, res: Response) => {
     } catch (error) {
     console.log(error);
         }
+}
+export const sendmymailSendGrid = async (req: Request, res: Response) => {
+      sgMail.setApiKey('');
+      const msg = {
+        to: 'ambinintsoa.m.herizo@gmail.com', // Change to your recipient
+        from: '"Zo Abminintsoa 👻" nambinintsoa577@gmail.com', // Change to your verified sender
+        subject: 'Sending with SendGrid is Fun',
+        text: 'and easy to do anywhere, even with Node.js',
+        html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+      }
+      sgMail
+        .send(msg)
+        .then((response) => {
+          console.log(response[0].statusCode)
+          console.log(response[0].headers)
+          req.flash('success' , 'vous avez postuler avec succes')
+          return res.redirect('/myjobs')
+        })
+        .catch((error) => {
+          console.error(error)
+        })
 }
 

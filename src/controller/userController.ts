@@ -5,7 +5,7 @@ import { updateInfoValidation } from "../validation/user.validation";
 import bcryptjs from 'bcryptjs';
 
 export const fetchAllUser = async (req: Request, res: Response ) => { 
-    const take = 15;
+    const take = 10;
     let pager = parseInt( req.query.page as string || '1');
     const page = ( 0 < pager) ? pager : 1;
     const repository = getManager().getRepository(User);
@@ -35,7 +35,7 @@ export const createUser = async (req: Request, res: Response ) => {
         const body = req.body;
         const {error} = updateInfoValidation.validate({
             username: body.username,
-            email: body.email
+            email: body.email,
         });
       
         if (error) {

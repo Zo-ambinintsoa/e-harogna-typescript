@@ -20,13 +20,22 @@ const { email, confirmPassword, password} = req.body;
     }
     let username = email.split('@')[0];
     const repository = getManager().getRepository(User);
+    const user = await  repository.findOneBy([{email : email} ,{ username: username }]);
+    if (user) {
+        req.flash('danger' , 'email deja prise')
+        return res.redirect('/register')
+    }
     await repository.save({
         email: email,
         username: username,
-        password: await bcryptjs.hash(password, 10)
+        password: await bcryptjs.hash(password, 10),
+        role: {
+            id: 4
+        }
         }).then((result) => {
             const {password , ...user} = result;
-            return res.send(user);
+            req.flash('success' , 'Vous pouver maitenan vous connecter creer avec succer')
+            return res.redirect('/login')
         }).catch((err) => {
             return res.status(500).send(err);
         });
@@ -37,7 +46,7 @@ export const Login = async (req: Request, res: Response) => {
     const email :string = req.body.email;
     const password :string = req.body.password;    
     
-    if(req.session['uId'] !== undefined) req.session['uId'].destroy();
+    // if(req.session['uId'] !== undefined) req.session['uId'].destroy();
 
     const repository = getManager().getRepository(User);
     await  repository.findOneBy([{email : email} ,{ username: email }]).then( async (result) => {

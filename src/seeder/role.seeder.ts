@@ -43,7 +43,7 @@ createConnection().then(async (result) => {
        await UserRepository.save({
             email: 'nambinintsoa577@gmail.com',
             username: 'nambinintsoa577',
-            password: await bcryptjs.hash('ambinintsoa123', 10),
+            password: await bcryptjs.hash('admin123', 10),
             role: admin
         })
         } catch (error) {
