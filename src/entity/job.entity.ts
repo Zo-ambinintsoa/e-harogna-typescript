@@ -1,4 +1,6 @@
-import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import { MyJob } from "./myjob.entity";
+import { User } from "./user.entity";
 
 @Entity()
 export class Job {
@@ -31,4 +33,11 @@ export class Job {
     
     @Column()
     IsOpen: Boolean;
+
+    @ManyToOne(() => User, (user) => user.job)
+    user: User;
+
+    @OneToMany(() => MyJob, (job) => job.job)
+    myjob: MyJob[]
+    
 }

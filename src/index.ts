@@ -45,10 +45,7 @@ createConnection().then((connection) => {
         res.status(500).
         render('500', {title:'500: Internal Server Error', error: error});
     });
-    app.use(function(error, req, res, next) {
-        res.status(401).
-        render('Auth/login', {title:'Autentification'});
-    });
+    
     app.listen(8000, ()=>{
     console.log("listening in port 8000");
     });

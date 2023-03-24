@@ -2,7 +2,9 @@ import express, {Router} from 'express';
 import { authenticatedUser, Login, Logout, Register, UpdateInfo, UpdatePassword } from './controller/authController';
 import { createCourseCat, createCourseCatView, DeleteCourseCat, fetchAllCourseCat, UpdateCourseCat } from './controller/CourseCat.controller';
 import { createCourse, createCourseView, DeleteCourse, fetchAllCourse, fetchAllCourseFront, fetchOneCourseFront, getOneCourse, UpdateCourse } from './controller/CourseController';
-import { fetchAllfile, UploadFile, UploadImage } from './controller/imageController';
+import { sendmymail } from './controller/emailController';
+import { fetchAllfile, UploadFile, UploadFileJob, UploadImage } from './controller/imageController';
+import { createJob, createJobView, DeleteJob, fetchAllJob, fetchAllJobFront, getOneJob, saveJob, UpdateJob } from './controller/jobController';
 import { fetchPermission } from './controller/permissionController';
 import { createRole, DeleteRole, fetchRole, getOneRole, UpdateRole } from './controller/roleController';
 import { createUser, DeleteUser, fetchAllUser, getOneUser, UpdateUser } from './controller/userController';
@@ -25,20 +27,25 @@ export const routes = (router: Router )=>{
         });
     });
 
+    router.get('/pricing', function(req , res) {
+        res.render('pages/pricing', {
+            page_name: "register",
+            title: 'Nos Prix'
+        });
+    });
+
     router.get('/blog', fetchAllCourseFront);
     router.get('/blog/:id', fetchOneCourseFront);
     
     
-    router.get('/', function(req , res) {
-        const jwt = req.session['uId'];
-        // const payload: any = verify(jwt, process.env.SECRETE_TOKEN)
-        if (!jwt) {
-            return res.render('pages/homepage', {
-                page_name: "acceuil",
-                title: 'acceuille'
-            });
-        }
+    router.get('/', authMiddleware, function(req , res) {
+        return res.render('pages/homepage', {
+            page_name: "acceuil",
+            title: 'acceuille'
+        });
+    });
 
+    router.get('/welcome', function(req , res) {
         return res.render('pages/Home', {
             page_name: "acceuil",
             title: 'acceuille'
@@ -46,6 +53,7 @@ export const routes = (router: Router )=>{
     });
 
     router.get('/files', authMiddleware, fetchAllfile);
+    router.get('/mails', sendmymail);
 
     router.get('/courses', authMiddleware, fetchAllCourse );
     router.get('/course/create', authMiddleware, createCourseView);
@@ -59,15 +67,18 @@ export const routes = (router: Router )=>{
     
     router.get('/category/create', authMiddleware, createCourseCatView);
     router.post('api/category/create', authMiddleware, UploadImage, createCourseCat);
-    router.put('/api/category/:id', authMiddleware, UpdateCourseCat );
+    router.put('/api/category/:id', authMiddleware, UpdateJob );
     router.delete('/api/category/:id', authMiddleware, DeleteCourseCat );
 
 
-    router.get('/jobs', fetchAllCourseCat );
-    router.get('/job/create', createCourseCatView);
-    router.post('api/job/create', UploadImage, createCourseCat);
-    router.put('/api/job/:id', UpdateCourseCat );
-    router.delete('/api/job/:id', DeleteCourseCat );
+    router.get('/myjobs', fetchAllJobFront );
+    router.get('/jobs', authMiddleware , fetchAllJob );
+    router.get('/job/save/:id', authMiddleware , saveJob );
+    router.get('/job/create', authMiddleware, createJobView);
+    router.get('/job/view/:id', authMiddleware, getOneJob );
+    router.post('/api/job/create', authMiddleware, UploadFileJob, createJob);
+    router.put('/api/job/:id', authMiddleware, UpdateJob );
+    router.delete('/api/job/:id', authMiddleware, DeleteJob );
 
 
 

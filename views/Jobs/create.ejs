@@ -4,40 +4,36 @@
     <div class="app-wrapper">
         <div class="app-content pt-3 p-md-3 p-lg-4">
 		    <div class="container-xl">
-			    <h1 class="app-page-title mb-0">Creation d'un Cours</h1>
+			    <h1 class="app-page-title mb-0">Creation d'un Employ</h1>
 				<hr class="mb-4">
 				<div class="g-4 settings-section">
 					
-					<form class="settings-form row" action="/api/course/create"
+					<form class="settings-form row" action="/api/job/create"
                     method="post"
                     enctype="multipart/form-data"
 					>
-					<div class="col-12 col-md-4">
-						<h3 class="section-title">Details Generale</h3>
-						<div class="section-intro">Ici vous entrer les details generale a proopos de l'emploie.</div>
-					</div>
-					<div class="col-12 col-md-8">						
+					<div class="col-12">						
 						<div class="app-card app-card-settings shadow-sm p-4">
-							<div class="app-card-body">
-									<div class="mb-3">
-										<label for="exampleFormControlInput1" class="form-label">Titre du Cours</label>
-										<input type="text" class="form-control" id="exampleFormControlInput1" name="title" placeholder="cecie est un cours">
+							<div class="app-card-body row">
+									<div class="mb-3 col">
+										<label for="exampleFormControlInput1" class="form-label">Titre de l'employe</label>
+										<input type="text" class="form-control" id="exampleFormControlInput1" name="title" placeholder="Titre de l'employe">
 									  </div>
-									<div class="mb-3">
+									<div class="mb-3 col">
 										<label for="exampleFormControlInput1" class="form-label">Nom du company</label>
-										<input type="text" class="form-control" id="exampleFormControlInput1" name="companyName" placeholder="cecie est un cours">
+										<input type="text" class="form-control" id="exampleFormControlInput1" name="companyName" placeholder="Nom du company">
 									  </div>
 									<div class="mb-3">
-										<label for="exampleFormControlInput1" class="form-label">Nom du job</label>
-										<input type="text" class="form-control" id="exampleFormControlInput1" name="JobTitle" placeholder="cecie est un cours">
+										<label for="exampleFormControlInput1" class="form-label">Nom du Poste</label>
+										<input type="text" class="form-control" id="exampleFormControlInput1" name="JobTitle" placeholder="Nom du Poste">
 									</div>
-									<div class="mb-3">
+									<div class="mb-3 col">
 										<label for="exampleFormControlInput1" class="form-label">salaire minimun</label>
-										<input type="text" class="form-control" id="exampleFormControlInput1" name="MinSalary" placeholder="cecie est un cours">
+										<input type="number" class="form-control" id="exampleFormControlInput1" name="MinSalary" placeholder="salaire minimun">
 									</div>
-									<div class="mb-3">
+									<div class="mb-3 col">
 										<label for="exampleFormControlInput1" class="form-label">salaire maximum</label>
-										<input type="text" class="form-control" id="exampleFormControlInput1" name="MaxSalary" placeholder="cecie est un cours">
+										<input type="number" class="form-control" id="exampleFormControlInput1" name="MaxSalary" placeholder="salaire maximum">
 									</div>
 
 									<div class="mb-3">

@@ -10,7 +10,7 @@ export const UploadFile = async (req: Request, res: Response, next: Function) =>
         destination: "./upload",
         filename( req, file, callback) {
             const randomName = Math.random().toString(20).substr(2, 12);
-            return callback(null, `${randomName}-image${extname(file.originalname)}`)
+            return callback(null, `image-${randomName}${extname(file.originalname)}`)
         },
     });
     const upload = multer({storage, 
@@ -46,12 +46,53 @@ export const UploadFile = async (req: Request, res: Response, next: Function) =>
     })
 };
 
+export const UploadFileJob = async (req: Request, res: Response, next: Function) => { 
+    const storage = multer.diskStorage({
+        destination: "./upload/jobs",
+        filename( req, file, callback) {
+            const randomName = Math.random().toString(20).substr(2, 12);
+            return callback(null, `image-${randomName}${extname(file.originalname)}`)
+        },
+    });
+    const upload = multer({storage, 
+        fileFilter: function (req, file, callback) {
+            let ext = path.extname(file.originalname);
+            if(ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
+                return callback(new Error('Only images are allowed'))
+            }
+            callback(null, true);
+        }}).single('imagefile');
+
+    upload(req, res, async (err)=> {
+        if (err) {
+            return res.status(400).send(err);
+        }
+
+        req.body['imgUrl'] =  `/api/uploads/jobs/${req.file.filename}`;
+
+        const fileRepository = getManager().getRepository(harognaFile);
+        try {
+            await fileRepository.save({
+                filename: req.file.filename,
+                path: '/api/uploads/jobs',
+                ext: path.extname(req.file.filename),
+                user: {
+                    id: req.session['uId'].id
+                }
+            });
+        } catch (error) {
+            console.log(error);
+        }
+        next()
+    })
+};
+
 export const UploadImage = async (req: Request, res: Response, next: Function) => { 
     const storage = multer.diskStorage({
         destination: "./upload/courses",
         filename( req, file, callback) {
             const randomName = Math.random().toString(20).substr(2, 12);
-            return callback(null, `${randomName}-image${extname(file.originalname)}`)
+            return callback(null, `image-${randomName}${extname(file.originalname)}`)
         },
     });
     const upload = multer({storage,     
@@ -105,7 +146,7 @@ export const fetchAllfile = async (req: Request, res: Response ) => {
         // console.log(data)
         return res.status(200).render('CourseItems/index', {
             data,
-            page_name: "liste5",
+            page_name: "liste3",
             title: 'Fichier',
             meta: {
                 total,

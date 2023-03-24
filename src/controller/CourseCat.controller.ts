@@ -49,7 +49,8 @@ export const createCourseCat = async (req: Request, res: Response ) => {
             description: description.toString(),
             image: imgUrl,
             }).then((result) => {
-                return res.redirect('back');
+                req.flash('success' , 'categorie creer avec succer')
+                return res.redirect('/categories')
             }).catch((err) => {
                 return res.status(500).send(err);
             });
@@ -66,10 +67,8 @@ export const createCourseCat = async (req: Request, res: Response ) => {
             description: description.toString(),
             image: image
             }).then((result) => {
-            return res.status(200).send({
-                message: 'Info updated',
-                result
-            });
+                req.flash('success' , 'categorie mis a jours avec succer')
+                return res.redirect('/categories')
         }).catch((err) => {
             return res.status(500).send(err);
         });
@@ -92,7 +91,8 @@ export const createCourseCat = async (req: Request, res: Response ) => {
         const id = req.params.id;
         const repository = getManager().getRepository(CourseCat);
         await repository.delete({id : parseInt(id)}).then((result) => {
-            return res.status(200).send(result)
+            req.flash('success' , 'categorie supprimer avec succer')
+            return res.redirect('/categories')
         }).catch((err) => {
             return res.status(500).send(err);
         });

@@ -1,4 +1,4 @@
-import {Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import {Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn} from "typeorm";
 import { CourseCat } from "./courseCat.entity";
 import { CourseItem } from "./courseItem.entity";
 import { CourseLike } from "./CourseLike.entity";
@@ -25,6 +25,12 @@ export class Course {
 
     @Column()
     IsPublished: Boolean;
+
+    @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" })
+    created_at: Date;
+
+    @UpdateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)", onUpdate: "CURRENT_TIMESTAMP(6)" })
+    updated_at: Date;
 
     @ManyToOne(() => CourseCat, (courseCat) => courseCat.courses)
     courseCat: CourseCat;

@@ -1,5 +1,53 @@
 <style type="text/css">
-    
+.categories li a:before {
+    content: "\f0da";
+    font-family: 'FontAwesome';
+    margin-right: 5px;
+}
+/*
+Template sidebar
+*/
+
+.sidebar-title {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.categories li {
+    vertical-align: middle;
+}
+
+.categories li > ul {
+    padding-left: 15px;
+}
+
+.categories li > ul > li > a {
+    font-weight: 300;
+}
+
+.categories li a {
+    color: #999;
+    position: relative;
+    display: block;
+    padding: 5px 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.categories li a:before {
+    content: "\f0da";
+    font-family: 'FontAwesome';
+    margin-right: 5px;
+}
+
+.categories li a:hover {
+    color: #444;
+    background-color: #f5f5f5;
+}
+
+.categories > li.active > a {
+    font-weight: 600;
+    color: #444;
+}
 .blog-page .single_post {
 -webkit-transition: all .4s ease;
 transition: all .4s ease
@@ -206,70 +254,120 @@ margin-bottom: 15px;
 
 <%- include('../layouts/headerfront') %>
 <%- include('../layouts/navfront') %>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css">
+
 <div class="container blog-page">
-<div class="row clearfix">
-    <% if (data.length == 0) { %>
-        <h4>
-          Auccun cours n'est disponible
-        </h4>
-      <% } else { %>
-    <% data.forEach((item, i) => { %>
-    <div class="col-lg-4 col-md-12">
-        <div class="card single_post">
-            <div class="header">
-                <h2><strong>Most</strong> View</h2>
-            </div>
-        <div class="body">
-        <h3 class="m-t-0 m-b-5"><a href="blog-details.html"><%= item.title %></a></h3>
-            <ul class="meta">
-                <li><a href="javascript:void(0);"><i class="zmdi zmdi-account col-blue"></i>Read time: <%= item.readTime %></a></li>
-                <li><a href="javascript:void(0);"><i class="zmdi zmdi-label col-amber"></i><%= item.courseCat.title %></a></li>
-                <!-- <li><a href="javascript:void(0);"><i class="zmdi zmdi-comment-text col-blue"></i>Comments: 3</a></li> -->
-            </ul>
-        </div>
-        <div class="body">
-            <div class="img-post m-b-15">
-                <img src="<%= item.image %>" alt="Awesome Image">
-                <div class="social_share">
-                    <button class="btn btn-primary btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-facebook"></i></button>
-                    <button class="btn btn-primary btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-twitter"></i></button>
-                    <button class="btn btn-primary btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-instagram"></i></button>
+    <div class="row">
+        <div class="col-sm-12 col-md-9 mb40">
+            <div class="row clearfix">
+                <% if (data.length == 0) { %>
+                    <div class="col-sm-12 col-md-12 mb-5">
+                        <h4>
+                          Auccun cours n'est disponible
+                        </h4>
+                    </div>
+                  <% } else { %>
+                <% data.forEach((item, i) => { %>
+                <div class="col-lg-4 col-md-12">
+                    <div class="card single_post">
+                        <div class="header">
+                            <h2><strong>Most</strong> View</h2>
+                        </div>
+                    <div class="body">
+                    <h3 class="m-t-0 m-b-5"><a href="blog/<%= item.id %>"><%= item.title %></a></h3>
+                        <ul class="meta">
+                            <li><a href="javascript:void(0);"><i class="fa fa-clock-o"></i>Read time: <%= item.readTime %></a></li>
+                            <li><a href="javascript:void(0);"><i class="zmdi zmdi-label col-amber"></i><%= item.courseCat.title %></a></li>
+                            <!-- <li><a href="javascript:void(0);"><i class="zmdi zmdi-comment-text col-blue"></i>Comments: 3</a></li> -->
+                        </ul>
+                    </div>
+                    <div class="body">
+                        <div class="img-post m-b-15">
+                            <img src="<%= item.image %>" alt="Awesome Image">
+                            <div class="social_share">
+                                <button class="btn btn-primary btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-facebook"></i></button>
+                                <button class="btn btn-primary btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-twitter"></i></button>
+                                <button class="btn btn-primary btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-instagram"></i></button>
+                            </div>
+                        </div>
+                        <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal</p>
+                        <a href="blog/<%= item.id %>" title="read more" class="btn btn-round btn-info">Read More</a>
+                    </div>
+                    </div>
                 </div>
+                <% }) %>
             </div>
-            <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal</p>
-            <a href="blog-details.html" title="read more" class="btn btn-round btn-info">Read More</a>
+            <nav class="app-pagination">
+                <ul class="pagination justify-content-center">
+                    <% if (meta.page <= 1) { %>
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                    </li>
+                    <% } else { %>
+                        <li class="page-item">
+                            <a class="page-link" href="blog?page=<%= (meta.page-1) %>" tabindex="-1">Previous</a>
+                        </li>									
+                        <% } %>
+                    <% for(var i=0; i< meta.last_page; i++) {%>
+                    <li class="page-item <% if((i+1)==meta.page){%> active <% }%>"><a class="page-link" href="blog?page=<%= (i+1) %>"><%= (i+1) %></a></li>
+                    <% } %>
+                    <% if (meta.page >= meta.last_page) { %>
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Next</a>
+                        </li>
+                        <% } else { %>
+                            <li class="page-item">
+                                <a class="page-link" href="blog?page=<%= (meta.page+1) %>" tabindex="-1">Next</a>
+                            </li>									
+                            <% } %>
+            
+                </ul>
+            </nav><!--//app-pagination-->
+            <% } %>
         </div>
+        <div class="col-md-3 mb40">
+            <div class="mb40">
+                <form>
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search..." aria-describedby="basic-addon2">
+                        <button class="input-group-addon" id="basic-addon2"><i class="fa fa-search"></i></button>
+                    </div>
+                </form>
+            </div>
+            <!--/col-->
+            <div class="mb40">
+                <h4 class="sidebar-title">Categories</h4>
+                <ul class="list-unstyled categories">
+                    <!-- <li><a href="#">Rent</a></li> -->
+                    <% category.forEach((item, i) => { %>
+                        <li><a href="/category/<%= item.title %>"><%= item.title %></a></li>										
+                    <% }) %>
+                </ul>
+            </div>
+            <!--/col-->
+            <!-- <div>
+                <h4 class="sidebar-title">Latest News</h4>
+                <ul class="list-unstyled">
+                    <li class="media">
+                        <img class="d-flex mr-3 img-fluid" width="64" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="Generic placeholder image">
+                        <div class="media-body">
+                            <h5 class="mt-0 mb-1"><a href="#">Lorem ipsum dolor sit amet</a></h5> April 05, 2017
+                        </div>
+                    </li>
+                    <li class="media my-4">
+                        <img class="d-flex mr-3 img-fluid" width="64" src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="Generic placeholder image">
+                        <div class="media-body">
+                            <h5 class="mt-0 mb-1"><a href="#">Lorem ipsum dolor sit amet</a></h5> Jan 05, 2017
+                        </div>
+                    </li>
+                    <li class="media">
+                        <img class="d-flex mr-3 img-fluid" width="64" src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="Generic placeholder image">
+                        <div class="media-body">
+                            <h5 class="mt-0 mb-1"><a href="#">Lorem ipsum dolor sit amet</a></h5> March 15, 2017
+                        </div>
+                    </li>
+                </ul>
+            </div> -->
         </div>
     </div>
-    <% }) %>
-</div>
-<nav class="app-pagination">
-    <ul class="pagination justify-content-center">
-        <% if (meta.page <= 1) { %>
-        <li class="page-item disabled">
-            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-        </li>
-        <% } else { %>
-            <li class="page-item">
-                <a class="page-link" href="blog?page=<%= (meta.page-1) %>" tabindex="-1">Previous</a>
-            </li>									
-            <% } %>
-        <% for(var i=0; i< meta.last_page; i++) {%>
-        <li class="page-item <% if((i+1)==meta.page){%> active <% }%>"><a class="page-link" href="blog?page=<%= (i+1) %>"><%= (i+1) %></a></li>
-        <% } %>
-        <% if (meta.page >= meta.last_page) { %>
-            <li class="page-item disabled">
-                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Next</a>
-            </li>
-            <% } else { %>
-                <li class="page-item">
-                    <a class="page-link" href="blog?page=<%= (meta.page+1) %>" tabindex="-1">Next</a>
-                </li>									
-                <% } %>
-
-    </ul>
-</nav><!--//app-pagination-->
-<% } %>
 </div>
 <%- include('../layouts/footerfront') %>

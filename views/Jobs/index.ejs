@@ -8,7 +8,7 @@
 			    
 			    <div class="row g-3 mb-4 align-items-center justify-content-between">
 				    <div class="col-auto">
-			            <h1 class="app-page-title mb-0">Courses</h1>
+			            <h1 class="app-page-title mb-0">Liste des Jobs</h1>
 				    </div>
 				    <div class="col-auto">
 					     <div class="page-utilities">
@@ -36,9 +36,9 @@
 									</select>
 							    </div> -->
 							    <div class="col-auto">						    
-								    <a class="btn app-btn-secondary" href="/course/create">
+								    <a class="btn app-btn-secondary" href="/job/create">
 										<i class="fa fa-plus"></i>
-									    <span> Creer Course</span>
+									    <span> Creer Job</span>
 									</a>
 							    </div>
 						    </div><!--//row-->
@@ -65,10 +65,11 @@
 											<tr>
 												<th class="cell">Ref</th>
 												<th class="cell">Titre</th>
-												<th class="cell">Categorie</th>
-												<th class="cell">Date</th>
+												<th class="cell">Nom du companie</th>
+												<th class="cell">Poste</th>
 												<!-- <th class="cell">Status</th> -->
-												<th class="cell">Total</th>
+												<th class="cell">Salaire</th> 
+												<th class="cell">disponibiliter</th> 
 												<th class="cell"></th>
 											</tr>
 										</thead>
@@ -77,14 +78,15 @@
 											<tr>
 												<td class="cell"><%= item.id %></td>
 												<td class="cell"><span class="truncate"><%= item.title %></span></td>
-												<td class="cell"><%= item.courseCat.title %></td>
-												<td class="cell"><span>17 Oct</span><span class="note">2:16 PM</span></td>
+												<td class="cell"><span class="truncate"><%= item.companyName %></span></td>
+												<td class="cell"><%= item.JobTitle %></td>
+												<td class="cell"><span class="note"><%= item.MinSalary %> Ar - <%= item.MaxSalary %> Ar</span></td>
 												<!-- <td class="cell"><span class="badge bg-success">Paid</span></td> -->
-												<td class="cell">$ <%= item.price %></td>
+												<td class="cell"><%= item.IsOpen %></td>
 												<td class="cell">
-													<a class="text-secondary mr-3" href="/course/view/<%= item.id %>"><i class="fas fa-eyes"></i></a>
-													<a class="text-danger mr-3" href="/courses/delete?id=<%= item.id %>"><i class="fas fa-trash"></i></a>
-													<a class="text-success mr-3" href="/courses/edit?id=<%= item.id %>"><i class="fas fa-pencil"></i></a>
+													<a class="text-secondary mr-3" href="/job/view/<%= item.id %>"><i class="fas fa-eye"></i></a>
+													<a class="text-danger mr-3" href="/job/delete?id=<%= item.id %>"><i class="fas fa-trash"></i></a>
+													<a class="text-success mr-3" href="/job/edit?id=<%= item.id %>"><i class="fas fa-pencil"></i></a>
 												</td>
 											</tr>
 											<% }) %>

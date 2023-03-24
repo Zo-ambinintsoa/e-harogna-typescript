@@ -20,6 +20,7 @@ export const fetchAllCourse = async (req: Request, res: Response) => {
         return res.status(200).render('course/index', {
             data,
             page_name: "liste1",
+            title: 'Liste des cours',
             meta: {
                 total,
                 page,
@@ -40,12 +41,16 @@ export const fetchAllCourseFront = async (req: Request, res: Response) => {
         take,
         skip: (page - 1 ) * take,
         relations: ['courseCat', "courseitem"]
-    }).then((result) => {
+    }).then( async (result) => {
         const [data, total] = result;
+        const repository = getManager().getRepository(CourseCat);
+        const cat = await repository.find();
         // console.log(data)
         return res.status(200).render('pages/blogpage', {
             data,
             page_name: "liste1",
+            title: 'Liste des cours',
+            category: cat,
             meta: {
                 total,
                 page,
@@ -63,6 +68,7 @@ export const createCourseView = async (req:Request, res: Response) => {
         const cat = await repository.find();
         return res.render('Course/create', {
             page_name: "createcourse",
+            title: 'Creer un cours',
             data: cat
         });
     } catch (error) {
@@ -87,7 +93,8 @@ export const createCourse = async (req: Request, res: Response ) => {
                 id: parseInt(category || "1")
             }
             }).then((result) => {
-                return res.redirect('back');
+                req.flash('success' , 'cours creer avec succer')
+                return res.redirect('/courses')
             }).catch((err) => {
                 return res.status(500).send(err);
             });
@@ -114,10 +121,8 @@ export const createCourse = async (req: Request, res: Response ) => {
                 id: category
             }
             }).then((result) => {
-            return res.status(200).send({
-                message: 'Info updated',
-                result
-            });
+                req.flash('success' , 'cours mis a jour avec succer')
+                return res.redirect('/courses')
         }).catch((err) => {
             return res.status(500).send(err);
         });
@@ -127,9 +132,14 @@ export const createCourse = async (req: Request, res: Response ) => {
         const id = req.params.id;
         const repository = getManager().getRepository(Course);
         await repository.findOne({ where :{id : parseInt(id)} }).then((result) => {
+            let dat = result.created_at
+            let date = dat.toString().split(' ')[0];
+            console.log(date);
+            
             return res.render('Course/Show', {
                 page_name: "createcourse",
-                data: result
+                data: result,
+                date
             });
         }).catch((err) => {
             return res.status(500).send(err);
@@ -137,12 +147,19 @@ export const createCourse = async (req: Request, res: Response ) => {
     };
 
     export const fetchOneCourseFront = async (req: Request, res: Response) => {
-        const id = req.params.id || '1';
+        const id = req.params.id as string;
         const repository = getManager().getRepository(Course);
-        await repository.findOne({ where :{id : parseInt(id)} }).then((result) => {
+        await repository.findOne({ where :{id : parseInt(id)}, relations: ['courseCat', "courseitem"] }).then(async (result) => {
+            const repository = getManager().getRepository(CourseCat);
+            const cat = await repository.find();
+            let dat = result.created_at.toString().split(' ')
+            let t = dat[0] +" "+ dat[1] +" " + dat[2] + " " + dat[3];
             return res.render('pages/blogdetail', {
                 page_name: "createcourse",
-                data: result
+                title: 'Details du cours',
+                data: result,
+                date : t,
+                category: cat
             });
         }).catch((err) => {
             return res.status(500).send(err);

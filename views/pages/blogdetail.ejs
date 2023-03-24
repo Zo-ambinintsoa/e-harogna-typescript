@@ -266,29 +266,29 @@ Template sidebar
 </style>
 <%- include('../layouts/headerfront') %>
 <%- include('../layouts/navfront') %>
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
 <div class="container pb50">
     <div class="row">
         <div class="col-md-9 mb40">
             <article>
-                <img src="https://bootdey.com/img/Content/bg1.jpg" alt="" class="img-fluid mb30">
+                <img src="<%= data.image %>" alt="" class="img-fluid mb30">
                 <div class="post-content">
-                    <h3>A smart template that works 24/7 for your company</h3>
+                    <h3><%= data.title %></h3>
                     <ul class="post-meta list-inline">
                         <li class="list-inline-item">
-                            <i class="fa fa-user-circle-o"></i> <a href="#">John Doe</a>
+                            <i class="fa fa-clock-o"></i> <a href="#"><%= data.readTime %></a>
                         </li>
                         <li class="list-inline-item">
-                            <i class="fa fa-calendar-o"></i> <a href="#">29 June 2017</a>
+                            <i class="fa fa-calendar-o"></i> <a href="#"><%= date %></a>
                         </li>
                         <li class="list-inline-item">
-                            <i class="fa fa-tags"></i> <a href="#">Bootstrap4</a>
+                            <i class="fa fa-tags"></i> <a href="#"><%= data.courseCat.title %></a>
                         </li>
                     </ul>
-                    <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, </p>
-                    <p class="lead">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, </p>
-                    <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, </p>
-                    <ul class="list-inline share-buttons">
+                    
+                    <%- data.description %>
+                    
+                    <!-- <ul class="list-inline share-buttons">
                         <li class="list-inline-item">Share Post:</li>
                         <li class="list-inline-item">
                             <a href="#" class="social-icon-sm si-dark si-colored-facebook si-gray-round">
@@ -361,7 +361,7 @@ Template sidebar
                         <div class="clearfix float-right">
                             <button type="button" class="btn btn-primary btn-lg">Submit</button>
                         </div>
-                    </form>
+                    </form> -->
                 </div>
             </article>
             <!-- post article-->
@@ -380,22 +380,14 @@ Template sidebar
             <div class="mb40">
                 <h4 class="sidebar-title">Categories</h4>
                 <ul class="list-unstyled categories">
-                    <li><a href="#">Rent</a></li>
-                    <li><a href="#">Sale</a></li>
-                    <li class="active"><a href="#">Apartment</a>
-                        <ul class="list-unstyled">
-                            <li><a href="#">Office</a></li>
-                            <li><a href="#">Godown</a></li>
-                            <li><a href="#">Gerage</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="#">Top Rating</a></li>
-                    <li><a href="#">Trending</a></li>
-                    <li><a href="#">Newest Properties</a></li>
+                    <!-- <li><a href="#">Rent</a></li> -->
+                    <% category.forEach((item, i) => { %>
+                        <li><a href="/category/<%= item.title %>"><%= item.title %></a></li>										
+                    <% }) %>
                 </ul>
             </div>
             <!--/col-->
-            <div>
+            <!-- <div>
                 <h4 class="sidebar-title">Latest News</h4>
                 <ul class="list-unstyled">
                     <li class="media">
@@ -417,7 +409,7 @@ Template sidebar
                         </div>
                     </li>
                 </ul>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>
