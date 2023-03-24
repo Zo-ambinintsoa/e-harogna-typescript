@@ -1,4 +1,4 @@
-import {Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Course } from "./course.entity";
 
 @Entity()
@@ -7,14 +7,15 @@ export class CourseCat {
     id: number;
 
     @Column()
-    title: String;
+    title: string;
 
     @Column()
-    description: String;
+    description: string;
 
     @Column()
-    image: String;
-    
+    image: string;
+
     @OneToMany(() => Course, (courses) => courses.courseCat)
     courses: Course[];
+
 }
