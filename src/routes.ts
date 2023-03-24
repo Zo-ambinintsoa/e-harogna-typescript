@@ -90,8 +90,8 @@ export const routes = (router: Router )=>{
     router.post('/api/login', Login)
     router.get('/logout', Logout)
     
-    router.get('/api/user', authMiddleware, authenticatedUser)
     router.post('/api/logout', authMiddleware, Logout)
+    router.get('/api/user', authMiddleware, authenticatedUser)
     router.put('/api/user/update', authMiddleware, UpdateInfo)
     router.put('/api/user/update/password', authMiddleware, UpdatePassword)
 

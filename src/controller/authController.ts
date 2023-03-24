@@ -86,7 +86,7 @@ export const Login = async (req: Request, res: Response) => {
 export const authenticatedUser = async (req: Request, res: Response) => {
     try {
         const repository = getManager().getRepository(User);
-        await  repository.findOneBy({id : req.session['uId'].id})
+        await  repository.findOne({ where: {id : req.session['uId'].id}, relations: ['myjob', 'myjob.job', "role"]})
         .then( async (result) => { 
             if (!result) {
                 return res.status(401).send({
@@ -94,8 +94,12 @@ export const authenticatedUser = async (req: Request, res: Response) => {
                 })
             }
             const {password, ...user } = result;
-            return res.status(200).send({
-                user
+            console.log(user.myjob);
+            
+            return res.render('pages/userprofile', {
+                user,
+                page_name: "liste4",
+                title: 'A propos de moi',
             })
         })
         .catch(async (err) => {
