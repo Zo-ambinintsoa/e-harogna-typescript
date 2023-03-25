@@ -40,13 +40,16 @@ export const fetchAllJobFront = async (req: Request, res: Response ) => {
         relations: ['myjob', 'myjob.user', "user"]
     }).then((result) => {
         let [data, total] = result;
+        // let [myjob, ...job] = data;
         if (typeof req.session['uId'] !== undefined) {
             let id = req.session['uId'].id;
+            // console.log(data[0].myjob);
             data = data.map((item) => {
-                if (item.myjob.find((u) => u.user.id == id)) {
-                    return {isAdded: false, ...item}
+                let t = item.myjob.find((u) => u.user.id == id);
+                if (t) {
+                    return {isAdded: false, mj: t ,...item}
                 } else {
-                    return {isAdded: true, ...item}
+                    return {isAdded: true, mj: t, ...item}
                 }
             })
         }
@@ -182,6 +185,17 @@ export const createJob = async (req: Request, res: Response ) => {
         await repository.delete({id : parseInt(id)}).then((result) => {
                 req.flash('success' , 'Employe supprimer avec succer')
                 return res.redirect('/jobs')
+        }).catch((err) => {
+            return res.status(500).send(err);
+        });
+    }
+
+    export const DeleteMyJob = async (req: Request, res: Response ) => { 
+        const id = req.params.id;
+        const repository = getManager().getRepository(MyJob);
+        await repository.delete({id : parseInt(id)}).then((result) => {
+                req.flash('success' , 'Employe supprimer avec succer')
+                return res.redirect('/myjobs')
         }).catch((err) => {
             return res.status(500).send(err);
         });

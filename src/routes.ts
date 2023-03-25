@@ -4,7 +4,7 @@ import { createCourseCat, createCourseCatView, DeleteCourseCat, fetchAllCourseCa
 import { createCourse, createCourseView, DeleteCourse, fetchAllCourse, fetchAllCoursebyCategoryFront, fetchAllCourseFront, fetchOneCourseFront, getOneCourse, UpdateCourse } from './controller/CourseController';
 import { sendmymail, sendmymailSendGrid } from './controller/emailController';
 import { fetchAllfile, UploadFile, UploadFileJob, UploadImage } from './controller/imageController';
-import { createJob, createJobView, DeleteJob, fetchAllJob, fetchAllJobFront, getOneJob, postuleJobView, savemyJob, UpdateJob } from './controller/jobController';
+import { createJob, createJobView, DeleteJob, DeleteMyJob, fetchAllJob, fetchAllJobFront, getOneJob, postuleJobView, savemyJob, UpdateJob } from './controller/jobController';
 import { fetchPermission } from './controller/permissionController';
 import { createRole, DeleteRole, fetchRole, getOneRole, UpdateRole } from './controller/roleController';
 import { createUser, DeleteUser, fetchAllUser, getOneUser, UpdateUser } from './controller/userController';
@@ -68,7 +68,7 @@ export const routes = (router: Router )=>{
     router.get('/categories', authMiddleware, fetchAllCourseCat );
     
     router.get('/category/create', authMiddleware, createCourseCatView);
-    router.post('api/category/create', authMiddleware, UploadImage, createCourseCat);
+    router.post('/api/category/create', authMiddleware, UploadImage, createCourseCat);
     router.put('/api/category/:id', authMiddleware, UpdateJob );
     router.get('/api/delete/category/:id', authMiddleware, DeleteCourseCat );
 
@@ -83,6 +83,7 @@ export const routes = (router: Router )=>{
     router.post('/api/job/postuler', authMiddleware, UploadFileJob, createJob);
     router.put('/api/job/:id', authMiddleware, UpdateJob );
     router.get('/api/delete/job/:id', authMiddleware, DeleteJob );
+    router.get('/job/del/:id', authMiddleware, DeleteMyJob );
 
 
 
