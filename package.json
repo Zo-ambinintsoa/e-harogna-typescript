@@ -5,9 +5,9 @@
   "main": "src/index.ts",
   "scripts": {
     "env:cmd": "env-cmd",
-    "start": "yarn run env:cmd  ts-node src/index.ts",
-    "seed:role": "yarn run env:cmd  ts-node src/seeder/role.seeder.ts",
-    "seed:course": "yarn run env:cmd ts-node src/seeder/course.seeder.ts"
+    "start": "npm run env:cmd  ts-node src/index.ts",
+    "seed:role": "npm run env:cmd  ts-node src/seeder/role.seeder.ts",
+    "seed:course": "npm run env:cmd ts-node src/seeder/course.seeder.ts"
   },
   "keywords": [],
   "author": "zo Ambinintsoa",

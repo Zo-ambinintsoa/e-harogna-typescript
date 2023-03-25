@@ -1,0 +1,36 @@
+version: '3.8' #specifies docker compose version
+services:
+  web:
+    env_file:
+      - .env
+    build:
+      context: ./
+    # depends_on:
+    #   - mysqldb
+    volumes:
+      - .:/src
+    command: npm run start
+    ports:
+      - "8000:8000"
+    environment:
+      NODE_ENV: development
+      DEBUG: nodejs-docker-express:*
+
+#   mysqldb:
+#     image: mysql:5.7
+#     restart: unless-stopped
+#     env_file: ./.env
+#     environment:
+#       - MYSQL_ROOT_PASSWORD=$DATABASE_PASSWORD
+#       - MYSQL_DATABASE=$DATABASE_NAME
+#     ports:
+#       - $DATABASE_PORT:$DATABASE_PORT
+#     volumes:
+#       - db:/var/lib/mysql
+#   adminer:
+#     image: adminer
+#     restart: always
+#     ports:
+#       - 8080:8080
+# volumes:
+#   db:

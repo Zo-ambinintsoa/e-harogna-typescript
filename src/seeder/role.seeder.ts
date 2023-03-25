@@ -68,6 +68,7 @@ createConnection().then(async (result) => {
             await UserRepository.save({
                 email: env.user.adminEmail,
                 username: env.user.adminUsername,
+                IsConfirmed: true,
                 password: await bcryptjs.hash(env.user.adminPassword, 10),
                 role: admin
             })
