@@ -1,7 +1,7 @@
 import express, { Router } from 'express';
-import { authenticatedUser, Login, Logout, Register, UpdateInfo, UpdatePassword } from './controller/authController';
+import { authenticatedUser, Login, Logout, Register, UpdateInfo, UpdatePassword, updateUserview } from './controller/authController';
 import { createCourseCat, createCourseCatView, DeleteCourseCat, fetchAllCourseCat, UpdateCourseCat } from './controller/CourseCat.controller';
-import { createCourse, createCourseView, DeleteCourse, fetchAllCourse, fetchAllCourseFront, fetchOneCourseFront, getOneCourse, UpdateCourse } from './controller/CourseController';
+import { createCourse, createCourseView, DeleteCourse, fetchAllCourse, fetchAllCoursebyCategoryFront, fetchAllCourseFront, fetchOneCourseFront, getOneCourse, UpdateCourse } from './controller/CourseController';
 import { sendmymail, sendmymailSendGrid } from './controller/emailController';
 import { fetchAllfile, UploadFile, UploadFileJob, UploadImage } from './controller/imageController';
 import { createJob, createJobView, DeleteJob, fetchAllJob, fetchAllJobFront, getOneJob, postuleJobView, savemyJob, UpdateJob } from './controller/jobController';
@@ -54,6 +54,7 @@ export const routes = (router: Router) => {
     router.get('/blog', authMiddleware, fetchAllCourseFront);
     router.get('/blog/:id', authMiddleware, fetchOneCourseFront);
     router.get('/files', authMiddleware, fetchAllfile);
+    router.get('/courses/category/:cat', authMiddleware, fetchAllCoursebyCategoryFront);
     router.get('/mails', sendmymailSendGrid);
 
     router.get('/courses', authMiddleware, fetchAllCourse);
@@ -61,7 +62,7 @@ export const routes = (router: Router) => {
     router.post('/api/course/create', authMiddleware, UploadFile, createCourse);
     router.put('/api/course/:id', authMiddleware, UpdateCourse);
     router.get('/course/view/:id', authMiddleware, getOneCourse);
-    router.delete('/api/course/:id', authMiddleware, DeleteCourse);
+    router.get('/api/delete/course/:id', authMiddleware, DeleteCourse);
 
 
     router.get('/categories', authMiddleware, fetchAllCourseCat);
@@ -69,7 +70,7 @@ export const routes = (router: Router) => {
     router.get('/category/create', authMiddleware, createCourseCatView);
     router.post('api/category/create', authMiddleware, UploadImage, createCourseCat);
     router.put('/api/category/:id', authMiddleware, UpdateJob);
-    router.delete('/api/category/:id', authMiddleware, DeleteCourseCat);
+    router.get('/api/delete/category/:id', authMiddleware, DeleteCourseCat);
 
 
     router.get('/myjobs', authMiddleware, fetchAllJobFront);
@@ -81,7 +82,7 @@ export const routes = (router: Router) => {
     router.post('/api/job/create', authMiddleware, UploadFileJob, createJob);
     router.post('/api/job/postuler', authMiddleware, UploadFileJob, createJob);
     router.put('/api/job/:id', authMiddleware, UpdateJob);
-    router.delete('/api/job/:id', authMiddleware, DeleteJob);
+    router.get('/api/delete/job/:id', authMiddleware, DeleteJob);
 
 
 
@@ -90,17 +91,18 @@ export const routes = (router: Router) => {
     router.post('/api/login', Login)
     router.get('/logout', Logout)
 
-    router.get('/api/user', authMiddleware, authenticatedUser)
     router.post('/api/logout', authMiddleware, Logout)
+    router.get('/me', authMiddleware, authenticatedUser)
+    router.get('/update/user', authMiddleware, updateUserview)
     router.put('/api/user/update', authMiddleware, UpdateInfo)
-    router.put('/api/user/update/password', authMiddleware, UpdatePassword)
+    router.post('/api/user/update/password', authMiddleware, UpdatePassword)
 
 
     router.get('/api/users', authMiddleware, permissionMiddleware('User'), fetchAllUser)
     router.get('/api/users/:id', authMiddleware, permissionMiddleware('User'), getOneUser)
     router.post('/api/users', authMiddleware, permissionMiddleware('User'), createUser)
     router.put('/api/users/:id', authMiddleware, permissionMiddleware('User'), UpdateUser)
-    router.delete('/api/users/:id', authMiddleware, permissionMiddleware('User'), DeleteUser)
+    router.get('/api/delete/users/:id', authMiddleware, permissionMiddleware('User'), DeleteUser)
 
 
     router.get('/api/permission', authMiddleware, permissionMiddleware('Role'), fetchPermission)
@@ -109,7 +111,7 @@ export const routes = (router: Router) => {
     router.get('/api/role/:id', authMiddleware, permissionMiddleware('Role'), getOneRole)
     router.post('/api/role', authMiddleware, permissionMiddleware('Role'), createRole)
     router.put('/api/role/:id', authMiddleware, permissionMiddleware('Role'), UpdateRole)
-    router.delete('/api/role/:id', authMiddleware, permissionMiddleware('Role'), DeleteRole)
+    router.get('/api/delete/role/:id', authMiddleware, permissionMiddleware('Role'), DeleteRole)
 
     router.post('/api/upload', UploadImage)
     router.use('/api/uploads', express.static('./upload'))

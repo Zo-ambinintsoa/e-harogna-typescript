@@ -62,6 +62,30 @@ export const fetchAllCourseFront = async (req: Request, res: Response) => {
     });
 };
 
+export const fetchAllCoursebyCategoryFront = async (req: Request, res: Response) => {
+    const categoryId = parseInt(req.params.cat as string);
+    if (!req.params.cat) {
+        return res.redirect('/blog')
+    }
+    const repository = getManager().getRepository(CourseCat);
+    await repository.findOne({
+        where: { id: categoryId },
+        relations: ['courses']
+    }).then(async (result) => {
+        const repository = getManager().getRepository(CourseCat);
+        const cat = await repository.find();
+        console.log(result.courses)
+        return res.status(200).render('pages/blogbycat', {
+            data: result,
+            page_name: "liste1",
+            title: 'Liste des cours' + result.title,
+            category: cat,
+        })
+    }).catch((err) => {
+        return res.status(500).send(err);
+    });
+};
+
 export const createCourseView = async (req: Request, res: Response) => {
     const repository = getManager().getRepository(CourseCat);
     try {

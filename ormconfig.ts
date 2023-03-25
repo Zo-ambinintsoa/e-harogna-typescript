@@ -1,6 +1,5 @@
 import { env } from "./env";
 import { entities } from "./src/entity/entities";
-console.log(env);
 
 export = {
     type: env.database.schema,
