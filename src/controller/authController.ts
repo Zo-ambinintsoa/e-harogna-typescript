@@ -113,6 +113,36 @@ export const authenticatedUser = async (req: Request, res: Response) => {
     }
 
 };
+export const updateUserview = async (req: Request, res: Response) => {
+    try {
+        const repository = getManager().getRepository(User);
+        await  repository.findOne({ where: {id : req.session['uId'].id}, relations: ['myjob', 'myjob.job', "role"]})
+        .then( async (result) => { 
+            if (!result) {
+                return res.status(401).send({
+                    message: "an error occured"
+                })
+            }
+            const {password, ...user } = result;
+            console.log(user.myjob);
+            
+            return res.render('pages/updateuser', {
+                user,
+                page_name: "liste4",
+                title: 'A propos de moi',
+            })
+        })
+        .catch(async (err) => {
+            return res.status(500).send(err);
+        });        
+    } catch (error) {
+        return res.status(401).send({
+            message: "unauthenticated",
+            error
+        })
+    }
+
+};
 
 
 export const UpdateInfo = async (req: Request, res: Response) => {
