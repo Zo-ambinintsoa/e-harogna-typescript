@@ -696,7 +696,7 @@
             </p>
             <a class="btn btn-outline-success" href="/job/view/<%= item.id %>" role="button">Voir Details</a>
             <% if (item.isAdded !== true) { %>
-            <a class="btn btn-outline-danger" href="/job/del/<%= item.id %>" role="button">Supprimer</a>
+            <a class="btn btn-outline-danger" href="/job/del/<%= item.mj.id %>" role="button">Supprimer</a>
             <% } else { %>
               <a class="btn btn-outline-warning" href="/job/save/<%= item.id %>" role="button">Enregistrer</a>
               <% } %>
